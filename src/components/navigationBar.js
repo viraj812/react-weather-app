@@ -8,13 +8,11 @@ const NavComponent = (props) => {
     return (
 
         <nav>
-
-
             <div className="navButtons">
 
-                <div className='nav-item' onClick={() => handleClick('scroll2')}>Current</div>
+                <div className='nav-item' onClick={() => props.callback(['flex', 'none'], 'https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no')}>Current</div>
 
-                <div className='nav-item' onClick={() => handleClick('scroll3')}>Weekly</div>
+                <div className='nav-item' onClick={() => props.callback(['none', 'flex'], 'https://api.weatherapi.com/v1/forecast.json?key=7e59edf657214bdbb1c50318242104&q=${location}&days=7&aqi=no&alerts=no')}>Weekly</div>
 
             </div>
         </nav>

@@ -8,6 +8,8 @@ function App() {
   const [longitude, setLongitude] = useState(0);
   const [location, setLocation] = useState('Not Specified');
   const [weather, setWeather] = useState([{ temp: 'Not Available', humidity: 'Not Available' }]);
+  const [api, setApi] = useState(`https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no`);
+  const [display, setDisplay] = useState(['flex', 'none']);
 
   const handleLocation = (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ function App() {
     const lat = latitude;
     const lon = longitude;
 
-    const result = axios.get(`https://api.weatherapi.com/v1/forecast.json?key=7e59edf657214bdbb1c50318242104&q=${location}&days=7&aqi=no&alerts=no`);
+    const result = axios.get(api);
 
     console.log(lat, lon)
 
@@ -52,29 +54,36 @@ function App() {
           var max_temp = e.day.maxtemp_c;
           var avg_temp = e.day.avgtemp_c;
           var min_temp = e.day.mintemp_c;
+          var humidity = e.day.avghumidity;
 
-          weather_data.push({date: date, max_temp: max_temp, min_temp: min_temp, avg_temp:avg_temp})
+          weather_data.push({date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity})
         })
-        setWeather(weather_data)
+        setWeather(weather_data);
         console.log("ELSE")
       }
     }
     );
 
   }
+
+  const buttonCallback = (display, api) => {
+      setDisplay(display);
+      setApi(api);
+      setWeather([{ temp: 'Not Available', humidity: 'Not Available' }]);
+  }
   return (
     <div className="App">
 
       <div className='main-div'>
 
-        {/* <div className="current-result-div" id="current-result">
+        <div className="current-result-div" id="current-result" style={{display: display[0]}}>
           <div className='result-bg'></div>
-          <div id='stats-div'>
+          <div id='current-stats-div'>
             {
               weather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
-                  <div className='weather-item'>
+                  <div className='current-weather-item'>
                     {e.temp} <br />
                     {e.humidity}
                   </div>
@@ -86,9 +95,9 @@ function App() {
 
             </div></div>
           <div id='info-div'>Cloudy <br /><br /> Location: {location}</div>
-        </div> */}
+        </div>
 
-        <div className="weekly-result-div" id="weekly-result">
+        <div className="weekly-result-div" id="weekly-result" style={{display: display[1]}}>
           <div className='result-bg'></div>
           <div id='stats-div'>
             {
@@ -96,8 +105,8 @@ function App() {
                 console.log(e.temp, e.humidity)
                 return (
                   <div className='weather-item'>
-                    {e.date} <br />
-                    {e.avg_temp}
+                    <div className='date-div'>{e.date}</div> <br/>
+                    <div className='weather-div'>Avg Temp: {e.avg_temp}°C <br/> Max Temp: {e.max_temp}°C <br/> Min Temp: {e.min_temp}°C <br/> Humidity: {e.humidity}</div>
                   </div>
                 );
               })
@@ -111,7 +120,7 @@ function App() {
 
         <div className='input-div'>
           <div className='input-bg'></div>
-          <NavComponent />
+          <NavComponent callback={buttonCallback}/>
           <input type="text" className='input-group' placeholder="Search by Location" onChange={(e) => handleLocation(e)} /> <br />
           <input type="text" className='input-group' placeholder="Latitude" onChange={(e) => handleLatitude(e)} />
           <input type="text" className='input-group' placeholder="Longitude" onChange={(e) => handleLongitude(e)} /> <br />
