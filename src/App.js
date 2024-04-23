@@ -44,7 +44,7 @@ function App() {
     }
     else {
       currentUrl = currentUrl.replace("${location}", `${latitude},${longitude}`);
-      weeklyUrl = currentUrl.replace("${location}", `${latitude},${longitude}`);
+      weeklyUrl = weeklyUrl.replace("${location}", `${latitude},${longitude}`);
     }
 
     const currentResult = axios.get(currentUrl);
@@ -53,7 +53,6 @@ function App() {
     // console.log(url)
 
     currentResult.then((res) => {
-
       var temp = "\nTemperature: " + res.data.current.temp_c + "°C\n";
       var humidity = "Humidity: " + res.data.current.humidity + "\n";
       var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
