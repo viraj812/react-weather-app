@@ -7,9 +7,9 @@ function App() {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [location, setLocation] = useState('Not Specified');
-  const [weather, setWeather] = useState([{ temp: 'Not Available', humidity: 'Not Available' }]);
-  const [api, setApi] = useState(`https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no`);
-  const [display, setDisplay] = useState(['flex', 'none']);
+  const [weather, setWeather] = useState([{ temp: 'Not Available', humidity: 'Not Available', condition: null }]);
+  const [api, setApi] = useState('https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no');
+  const [display, setDisplay] = useState(['flex', 'none', 'none']);
 
   const handleLocation = (e) => {
     e.preventDefault();
@@ -34,9 +34,18 @@ function App() {
     const lat = latitude;
     const lon = longitude;
 
-    const result = axios.get(api);
+    var url = null;
 
-    console.log(lat, lon)
+    if (latitude == 0 && longitude == 0){
+      url = api.replace("${location}", location);
+    }
+    else {
+      url = api.replace("${location}", `${latitude},${longitude}`);
+    }
+    
+    const result = axios.get(url);
+
+    console.log(url)
 
     result.then((res) => {
 
@@ -45,8 +54,11 @@ function App() {
       if (res.data.forecast == null) {
         var temp = "\nTemperature: " + res.data.current.temp_c + "°C\n";
         var humidity = "Humidity: " + res.data.current.humidity + "\n";
+        var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
 
-        setWeather([{ "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
+        setWeather([{location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
+        console.log(location);
+        console.log(res.data.location)
       }
       else {
         res.data.forecast.forecastday.forEach(e => {
@@ -55,12 +67,17 @@ function App() {
           var avg_temp = e.day.avgtemp_c;
           var min_temp = e.day.mintemp_c;
           var humidity = e.day.avghumidity;
+          var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
 
-          weather_data.push({ date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
+          weather_data.push({location: place, date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
         })
         setWeather(weather_data);
-        console.log("ELSE")
+        // console.log("ELSE")
       }
+
+      var new_display = display;
+      new_display[2] = 'flex';
+      setDisplay(new_display);
     }
     );
 
@@ -70,6 +87,7 @@ function App() {
     setDisplay(display);
     setApi(api);
     setWeather([{ temp: 'Not Available', humidity: 'Not Available' }]);
+    // setLocation('Not Specified');
   }
   return (
     <div className="App">
@@ -83,7 +101,7 @@ function App() {
               weather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
-                  <div className='current-weather-item'>
+                  <div className='current-weather-item' style={{display: display[2]}}>
                     {e.temp} <br />
                     {e.humidity}
                   </div>
@@ -94,7 +112,8 @@ function App() {
             <div className='title-div' id='title'>
 
             </div></div>
-          <div id='info-div'>Cloudy <br /><br /> Location: {location}</div>
+          <div id='info-div'>
+            {weather[0].condition} <br /><br /> Location: {weather[0].location}</div>
         </div>
 
         <div className="weekly-result-div" id="weekly-result" style={{ display: display[1] }}>
@@ -104,7 +123,7 @@ function App() {
               weather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
-                  <div className='weather-item'>
+                  <div className='weather-item' style={{display: display[2]}}>
                     <div className='date-div'>{e.date}</div> <br />
                     <div className='weather-div'>Avg Temp: {e.avg_temp}°C <br /> Max Temp: {e.max_temp}°C <br /> Min Temp: {e.min_temp}°C <br /> Humidity: {e.humidity}</div>
                   </div>
@@ -115,7 +134,7 @@ function App() {
             <div className='title-div' id='title'>
 
             </div></div>
-          <div id='info-div'> <br /><br /> Location: {location}</div>
+          <div id='info-div'> <br /><br /> Location: {weather[0].location}</div>
         </div>
 
         <div className='input-div'>
