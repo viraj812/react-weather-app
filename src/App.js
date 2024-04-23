@@ -36,13 +36,13 @@ function App() {
 
     var url = null;
 
-    if (latitude == 0 && longitude == 0){
+    if (latitude == 0 && longitude == 0) {
       url = api.replace("${location}", location);
     }
     else {
       url = api.replace("${location}", `${latitude},${longitude}`);
     }
-    
+
     const result = axios.get(url);
 
     console.log(url)
@@ -56,7 +56,7 @@ function App() {
         var humidity = "Humidity: " + res.data.current.humidity + "\n";
         var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
 
-        setWeather([{location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
+        setWeather([{ location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
         console.log(location);
         console.log(res.data.location)
       }
@@ -69,7 +69,7 @@ function App() {
           var humidity = e.day.avghumidity;
           var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
 
-          weather_data.push({location: place, date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
+          weather_data.push({ location: place, date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
         })
         setWeather(weather_data);
         // console.log("ELSE")
@@ -101,9 +101,12 @@ function App() {
               weather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
-                  <div className='current-weather-item' style={{display: display[2]}}>
-                    {e.temp} <br />
-                    {e.humidity}
+                  <div className='current-weather-item' style={{ display: display[2] }}>
+                    <div className='item-layer'></div>
+                    <div className='main-weather-div'>
+                      {e.temp} <br />
+                      {e.humidity}
+                    </div>
                   </div>
                 );
               })
@@ -123,9 +126,12 @@ function App() {
               weather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
-                  <div className='weather-item' style={{display: display[2]}}>
-                    <div className='date-div'>{e.date}</div> <br />
-                    <div className='weather-div'>Avg Temp: {e.avg_temp}°C <br /> Max Temp: {e.max_temp}°C <br /> Min Temp: {e.min_temp}°C <br /> Humidity: {e.humidity}</div>
+                  <div className='weather-item' style={{ display: display[2] }}>
+                    <div className='item-layer'></div>
+                    <div className='main-weather-div'>
+                      <div className='date-div'>{e.date}</div> <br />
+                      <div className='weather-div'>Avg Temp: {e.avg_temp}°C <br /> Max Temp: {e.max_temp}°C <br /> Min Temp: {e.min_temp}°C <br /> Humidity: {e.humidity}</div>
+                    </div>
                   </div>
                 );
               })
