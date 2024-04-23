@@ -48,7 +48,7 @@ function App() {
 
         setWeather([{ "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
       }
-      else{
+      else {
         res.data.forecast.forecastday.forEach(e => {
           var date = e.date;
           var max_temp = e.day.maxtemp_c;
@@ -56,7 +56,7 @@ function App() {
           var min_temp = e.day.mintemp_c;
           var humidity = e.day.avghumidity;
 
-          weather_data.push({date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity})
+          weather_data.push({ date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
         })
         setWeather(weather_data);
         console.log("ELSE")
@@ -67,16 +67,16 @@ function App() {
   }
 
   const buttonCallback = (display, api) => {
-      setDisplay(display);
-      setApi(api);
-      setWeather([{ temp: 'Not Available', humidity: 'Not Available' }]);
+    setDisplay(display);
+    setApi(api);
+    setWeather([{ temp: 'Not Available', humidity: 'Not Available' }]);
   }
   return (
     <div className="App">
 
       <div className='main-div'>
 
-        <div className="current-result-div" id="current-result" style={{display: display[0]}}>
+        <div className="current-result-div" id="current-result" style={{ display: display[0] }}>
           <div className='result-bg'></div>
           <div id='current-stats-div'>
             {
@@ -97,7 +97,7 @@ function App() {
           <div id='info-div'>Cloudy <br /><br /> Location: {location}</div>
         </div>
 
-        <div className="weekly-result-div" id="weekly-result" style={{display: display[1]}}>
+        <div className="weekly-result-div" id="weekly-result" style={{ display: display[1] }}>
           <div className='result-bg'></div>
           <div id='stats-div'>
             {
@@ -105,8 +105,8 @@ function App() {
                 console.log(e.temp, e.humidity)
                 return (
                   <div className='weather-item'>
-                    <div className='date-div'>{e.date}</div> <br/>
-                    <div className='weather-div'>Avg Temp: {e.avg_temp}°C <br/> Max Temp: {e.max_temp}°C <br/> Min Temp: {e.min_temp}°C <br/> Humidity: {e.humidity}</div>
+                    <div className='date-div'>{e.date}</div> <br />
+                    <div className='weather-div'>Avg Temp: {e.avg_temp}°C <br /> Max Temp: {e.max_temp}°C <br /> Min Temp: {e.min_temp}°C <br /> Humidity: {e.humidity}</div>
                   </div>
                 );
               })
@@ -120,10 +120,12 @@ function App() {
 
         <div className='input-div'>
           <div className='input-bg'></div>
-          <NavComponent callback={buttonCallback}/>
+          <NavComponent callback={buttonCallback} />
           <input type="text" className='input-group' placeholder="Search by Location" onChange={(e) => handleLocation(e)} /> <br />
-          <input type="text" className='input-group' placeholder="Latitude" onChange={(e) => handleLatitude(e)} />
-          <input type="text" className='input-group' placeholder="Longitude" onChange={(e) => handleLongitude(e)} /> <br />
+          <div className='position-group'>
+            <input type="text" className='lat-long' placeholder="Latitude" onChange={(e) => handleLatitude(e)} />
+            <input type="text" className='lat-long' placeholder="Longitude" onChange={(e) => handleLongitude(e)} /> <br />
+          </div>
           <input type="button" value="Show" onClick={() => handleClick()} />
         </div>
 
