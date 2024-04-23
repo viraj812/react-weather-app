@@ -7,8 +7,9 @@ function App() {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [location, setLocation] = useState('Not Specified');
-  const [weather, setWeather] = useState([{ temp: 'Not Available', humidity: 'Not Available', condition: null }]);
-  const [api, setApi] = useState('https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no');
+  const [currentWeather, setCurrentWeather] = useState([{ temp: 'Not Available', humidity: 'Not Available', condition: null }]);
+  const [weeklyWeather, setWeeklyWeather] = useState([]);
+  const [api, setApi] = useState(['https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no', 'https://api.weatherapi.com/v1/forecast.json?key=7e59edf657214bdbb1c50318242104&q=${location}&days=7&aqi=no&alerts=no']);
   const [display, setDisplay] = useState(['flex', 'none', 'none']);
 
   const handleLocation = (e) => {
@@ -34,59 +35,58 @@ function App() {
     const lat = latitude;
     const lon = longitude;
 
-    var url = null;
+    var currentUrl = api[0];
+    var weeklyUrl = api[1];
 
     if (latitude == 0 && longitude == 0) {
-      url = api.replace("${location}", location);
+      currentUrl = currentUrl.replace("${location}", location);
+      weeklyUrl = weeklyUrl.replace("${location}", location);
     }
     else {
-      url = api.replace("${location}", `${latitude},${longitude}`);
+      currentUrl = currentUrl.replace("${location}", `${latitude},${longitude}`);
+      weeklyUrl = currentUrl.replace("${location}", `${latitude},${longitude}`);
     }
 
-    const result = axios.get(url);
+    const currentResult = axios.get(currentUrl);
+    const weeklyResult = axios.get(weeklyUrl);
 
-    console.log(url)
+    // console.log(url)
 
-    result.then((res) => {
+    currentResult.then((res) => {
+
+      var temp = "\nTemperature: " + res.data.current.temp_c + "°C\n";
+      var humidity = "Humidity: " + res.data.current.humidity + "\n";
+      var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
+
+      setCurrentWeather([{ location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
+    });
+
+    weeklyResult.then((res) => {
 
       var weather_data = []
 
-      if (res.data.forecast == null) {
-        var temp = "\nTemperature: " + res.data.current.temp_c + "°C\n";
-        var humidity = "Humidity: " + res.data.current.humidity + "\n";
+      res.data.forecast.forecastday.forEach(e => {
+        var date = e.date;
+        var max_temp = e.day.maxtemp_c;
+        var avg_temp = e.day.avgtemp_c;
+        var min_temp = e.day.mintemp_c;
+        var humidity = e.day.avghumidity;
         var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
 
-        setWeather([{ location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
-        console.log(location);
-        console.log(res.data.location)
-      }
-      else {
-        res.data.forecast.forecastday.forEach(e => {
-          var date = e.date;
-          var max_temp = e.day.maxtemp_c;
-          var avg_temp = e.day.avgtemp_c;
-          var min_temp = e.day.mintemp_c;
-          var humidity = e.day.avghumidity;
-          var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
+        weather_data.push({ location: place, date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
+      });
+      setWeeklyWeather(weather_data);
+    });
 
-          weather_data.push({ location: place, date: date, max_temp: max_temp, min_temp: min_temp, avg_temp: avg_temp, humidity: humidity })
-        })
-        setWeather(weather_data);
-        // console.log("ELSE")
-      }
 
-      var new_display = display;
-      new_display[2] = 'flex';
-      setDisplay(new_display);
-    }
-    );
-
+    var new_display = display;
+    new_display[2] = 'flex';
+    setDisplay(new_display);
   }
 
-  const buttonCallback = (display, api) => {
+  const buttonCallback = (display) => {
     setDisplay(display);
-    setApi(api);
-    setWeather([{ temp: 'Not Available', humidity: 'Not Available' }]);
+    // setCurrentWeather([{ temp: 'Not Available', humidity: 'Not Available' }]);
     // setLocation('Not Specified');
   }
   return (
@@ -98,7 +98,7 @@ function App() {
           <div className='result-bg'></div>
           <div id='current-stats-div'>
             {
-              weather.map(e => {
+              currentWeather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
                   <div className='current-weather-item' style={{ display: display[2] }}>
@@ -116,14 +116,14 @@ function App() {
 
             </div></div>
           <div id='info-div'>
-            {weather[0].condition} <br /><br /> Location: {weather[0].location}</div>
+            {currentWeather[0].condition} <br /><br /> Location: {currentWeather[0].location}</div>
         </div>
 
         <div className="weekly-result-div" id="weekly-result" style={{ display: display[1] }}>
           <div className='result-bg'></div>
           <div id='stats-div'>
             {
-              weather.map(e => {
+              weeklyWeather.map(e => {
                 console.log(e.temp, e.humidity)
                 return (
                   <div className='weather-item' style={{ display: display[2] }}>
@@ -140,7 +140,7 @@ function App() {
             <div className='title-div' id='title'>
 
             </div></div>
-          <div id='info-div'> <br /><br /> Location: {weather[0].location}</div>
+          <div id='info-div'> <br /><br /> Location: {currentWeather[0].location}</div>
         </div>
 
         <div className='input-div'>

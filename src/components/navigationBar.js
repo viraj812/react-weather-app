@@ -14,7 +14,7 @@ const NavComponent = (props) => {
 
                 <div className='nav-item' onClick={() => {
 
-                    props.callback(['flex', 'none', 'none'], 'https://api.weatherapi.com/v1/current.json?key=7e59edf657214bdbb1c50318242104&q=${location}&aqi=no');
+                    props.callback(['flex', 'none', 'flex']);
 
                     setColor(['rgb(152, 62, 255)', 'black']);
 
@@ -23,7 +23,7 @@ const NavComponent = (props) => {
 
                 <div className='nav-item' onClick={() => {
 
-                    props.callback(['none', 'flex', 'none'], 'https://api.weatherapi.com/v1/forecast.json?key=7e59edf657214bdbb1c50318242104&q=${location}&days=7&aqi=no&alerts=no');
+                    props.callback(['none', 'flex', 'flex']);
 
                     setColor(['black', 'rgb(152, 62, 255)']);
                 }

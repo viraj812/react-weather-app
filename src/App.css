@@ -325,10 +325,10 @@ input[type=button] {
 }
 
 .weather-item:hover{
-  transform: scale(1.5);
+  transform: scale(1.7);
   background-color: black;
   cursor: pointer;
-  z-index: 6;
+  z-index: 60;
 }
 
 .date-div{
