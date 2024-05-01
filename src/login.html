@@ -1,0 +1,75 @@
+<html>
+<head></head>
+
+<body>
+
+    <script>
+        function openPage(url){
+            window.open(url);
+        }
+    </script>
+    
+<div id="container">
+    <div id="loginbox">
+        <h2>Login</h2>
+        <form method="post" action="http://localhost:3150/" >
+        <input type="text" id="user" name="user" placeholder="Enter Username">
+        <br>
+        <input type="password" id="pass" name="pass" placeholder="Enter Passoword">
+        <br>
+        <button type="submit" value="Login">LOGIN</button>
+        </form>
+    </div>
+</div>
+
+</body>
+<style>
+    body{
+        background: #17572e;
+        margin-top: 100px;
+        background-image: url('./bg2.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    form{
+        text-align: center;
+    }
+
+    #container{
+        position: relative;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #loginbox{
+        height: 300px;
+        width: 300px;
+
+        position: relative;
+        
+        border: 10px solid black;
+        background-color: bisque;
+    }
+
+    input{
+        position: relative;
+
+        height: 30px;
+        width: 200px;
+
+        margin: 10px;
+        text-align: center;
+        border-radius: 10px 20px;
+
+        background-color: aqua;
+    }
+
+    button{
+        margin-top: 20px;
+    }
+</style>
+</html>

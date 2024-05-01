@@ -54,10 +54,11 @@ function App() {
 
     currentResult.then((res) => {
       var temp = "\nTemperature: " + res.data.current.temp_c + "°C\n";
-      var humidity = "Humidity: " + res.data.current.humidity + "\n";
+      var humidity = "Humidity: " + res.data.current.humidity + "%\n";
       var place = `${res.data.location.name}, ${res.data.location.region}, ${res.data.location.country}`;
+      var wind = "Wind Speed: " + res.data.current.wind_kph + " km/h";
 
-      setCurrentWeather([{ location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text }]);
+      setCurrentWeather([{ location: place, "temp": temp, "humidity": humidity, condition: res.data.current.condition.text, wind: wind }]);
     });
 
     weeklyResult.then((res) => {
@@ -104,7 +105,8 @@ function App() {
                     <div className='item-layer'></div>
                     <div className='main-weather-div'>
                       {e.temp} <br />
-                      {e.humidity}
+                      {e.humidity} <br/>
+                      {e.wind}
                     </div>
                   </div>
                 );
@@ -147,8 +149,8 @@ function App() {
           <NavComponent callback={buttonCallback} />
           <input type="text" className='input-group' placeholder="Search by Location" onChange={(e) => handleLocation(e)} /> <br />
           <div className='position-group'>
-            <input type="text" className='lat-long' placeholder="Latitude" onChange={(e) => handleLatitude(e)} />
-            <input type="text" className='lat-long' placeholder="Longitude" onChange={(e) => handleLongitude(e)} /> <br />
+            <input type="text" className='lat-long' placeholder="Lat" onChange={(e) => handleLatitude(e)} />
+            <input type="text" className='lat-long' placeholder="Lon" onChange={(e) => handleLongitude(e)} /> <br />
           </div>
           <input type="button" value="Show" onClick={() => handleClick()} />
         </div>
