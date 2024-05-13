@@ -117,7 +117,7 @@ function App() {
 
             </div></div>
           <div id='info-div'>
-            {currentWeather[0].condition} <br /><br /> Location: {currentWeather[0].location}</div>
+            {currentWeather[0].condition} <br /><br />Location: {currentWeather[0].location}</div>
         </div>
 
         <div className="weekly-result-div" id="weekly-result" style={{ display: display[1] }}>

@@ -272,7 +272,11 @@ input[type=button] {
   padding-left: 15px;
   padding-bottom: 15px;
 
+  font-weight: 700;
+  font-size: 20px;
+
   border-top: 5px solid rgb(0, 0, 0);
+  color: black;
 }
 
 .current-weather-item{
