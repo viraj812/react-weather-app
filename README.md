@@ -1,4 +1,4 @@
-# The hosted Website link is mentioned below
+# The hosted website link is mentioned below
 
 Weather App: https://react-weather-app-taupe-six.vercel.app/
 
